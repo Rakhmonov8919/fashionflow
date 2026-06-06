@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERP — FashionFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0e0f; --bg2: #141618; --bg3: #1c1f21;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e6e1; --muted: #7a7975;
+    --accent: #c8f04d;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 48px; pointer-events: none; z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px; border-bottom: 1px solid var(--border);
+    background: rgba(12,14,15,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; text-decoration: none; color: var(--text); }
+  .logo span { color: var(--accent); }
+  nav ul { display: flex; gap: 8px; list-style: none; }
+  nav ul li a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 8px; transition: all 0.2s; }
+  nav ul li a:hover, nav ul li a.active { color: var(--text); background: var(--bg3); }
+
+  .page-hero {
+    padding: 64px 48px 48px;
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 40px;
+  }
+  .page-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(200,240,77,0.1); border: 1px solid rgba(200,240,77,0.25);
+    color: var(--accent); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; margin-bottom: 20px;
+  }
+  .page-hero h1 { font-family: 'Fraunces', serif; font-size: 52px; font-weight: 700; letter-spacing: -2px; line-height: 1; margin-bottom: 16px; }
+  .page-hero p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 480px; }
+  .status-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; min-width: 220px; }
+  .status-block .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+  .status-block .status-row:last-child { margin-bottom: 0; }
+  .status-val { font-weight: 600; color: var(--accent); }
+  .status-label { color: var(--muted); }
+
+  .content { padding: 0 48px 80px; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+  .metric-card .val { font-size: 28px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  .metric-card .label { font-size: 12px; color: var(--muted); }
+  .metric-card .change { font-size: 11px; color: #4df0b8; margin-top: 4px; }
+
+  .modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+  .module-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+  .module-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .module-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .module-features { display: flex; flex-direction: column; gap: 6px; }
+  .feature-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .feature-row::before { content: '✓'; color: var(--accent); font-weight: 600; font-size: 12px; flex-shrink: 0; }
+
+  .supply-table { width: 100%; border-collapse: collapse; }
+  .supply-table th { text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .supply-table td { font-size: 13px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .supply-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .status-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+  .pill-green { background: rgba(77,240,184,0.12); color: #4df0b8; }
+  .pill-yellow { background: rgba(200,240,77,0.12); color: var(--accent); }
+  .pill-red { background: rgba(240,77,122,0.12); color: #f04d7a; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Fashion<span>Flow</span></a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="erp.html" class="active">ERP</a></li>
+    <li><a href="crm.html">CRM</a></li>
+    <li><a href="wms.html">WMS</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div>
+    <div class="page-tag">Enterprise Resource Planning</div>
+    <h1>ERP</h1>
+    <p>Centralised financial management, procurement, and supply chain operations for the wholesale fashion company — hosted on AWS Private Subnet.</p>
+  </div>
+  <div class="status-block">
+    <div class="status-row"><span class="status-label">System Status</span><span class="status-val">● Online</span></div>
+    <div class="status-row"><span class="status-label">Uptime</span><span class="status-val">99.97%</span></div>
+    <div class="status-row"><span class="status-label">Response</span><span class="status-val">12ms</span></div>
+    <div class="status-row"><span class="status-label">Region</span><span class="status-val">eu-west-1</span></div>
+  </div>
+</div>
+
+<div class="content">
+  <p class="section-label">Key Metrics</p>
+  <div class="metrics-row">
+    <div class="metric-card"><div class="val">£4.2M</div><div class="label">Monthly Revenue</div><div class="change">↑ 8.3% vs last month</div></div>
+    <div class="metric-card"><div class="val">1,847</div><div class="label">Active Orders</div><div class="change">↑ 12% this week</div></div>
+    <div class="metric-card"><div class="val">94.2%</div><div class="label">Budget Utilisation</div><div class="change">On track</div></div>
+    <div class="metric-card"><div class="val">38</div><div class="label">Active Suppliers</div><div class="change">3 new this quarter</div></div>
+  </div>
+
+  <p class="section-label">ERP Modules</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <h3>Financial Management</h3>
+      <p>Real-time financial reporting, accounts payable/receivable, and budget tracking across all business units.</p>
+      <div class="module-features">
+        <div class="feature-row">General ledger & journal entries</div>
+        <div class="feature-row">Multi-currency transactions</div>
+        <div class="feature-row">Automated VAT reporting</div>
+        <div class="feature-row">Cash flow forecasting</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <h3>Procurement & Purchasing</h3>
+      <p>Streamlined supplier management, purchase order workflow, and contract negotiation tracking.</p>
+      <div class="module-features">
+        <div class="feature-row">Purchase order automation</div>
+        <div class="feature-row">Supplier performance scoring</div>
+        <div class="feature-row">3-way invoice matching</div>
+        <div class="feature-row">Contract lifecycle management</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <h3>Supply Chain Planning</h3>
+      <p>Demand forecasting, production planning, and logistics coordination across 4 regional warehouses.</p>
+      <div class="module-features">
+        <div class="feature-row">Demand forecast (ML-assisted)</div>
+        <div class="feature-row">Reorder point automation</div>
+        <div class="feature-row">Supplier lead time tracking</div>
+        <div class="feature-row">Multi-warehouse allocation</div>
+      </div>
+    </div>
+    <div class="module-card">
+      <h3>HR & Payroll</h3>
+      <p>Employee management, payroll processing, and compliance reporting for 140+ staff across all locations.</p>
+      <div class="module-features">
+        <div class="feature-row">Automated payroll runs</div>
+        <div class="feature-row">Leave & attendance tracking</div>
+        <div class="feature-row">HMRC compliance reports</div>
+        <div class="feature-row">Role-based access control</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">Active Supply Orders</p>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+    <table class="supply-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Supplier</th>
+          <th>Category</th>
+          <th>Value</th>
+          <th>ETA</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>#PO-2847</td><td>Milano Textiles</td><td>Outerwear</td><td>£48,200</td><td>Jun 14</td><td><span class="status-pill pill-green">In Transit</span></td></tr>
+        <tr><td>#PO-2851</td><td>Barcelona Fabrics</td><td>Knitwear</td><td>£31,500</td><td>Jun 18</td><td><span class="status-pill pill-green">In Transit</span></td></tr>
+        <tr><td>#PO-2863</td><td>Istanbul Wholesale</td><td>Denim</td><td>£72,800</td><td>Jun 22</td><td><span class="status-pill pill-yellow">Processing</span></td></tr>
+        <tr><td>#PO-2871</td><td>Paris Collection</td><td>Formal Wear</td><td>£24,100</td><td>Jul 02</td><td><span class="status-pill pill-yellow">Pending</span></td></tr>
+        <tr><td>#PO-2879</td><td>London Studio</td><td>Accessories</td><td>£15,600</td><td>Jul 08</td><td><span class="status-pill pill-red">Delayed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

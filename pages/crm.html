@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM — FashionFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0e0f; --bg2: #141618; --bg3: #1c1f21;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e6e1; --muted: #7a7975;
+    --accent: #4df0b8;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 48px; pointer-events: none; z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px; border-bottom: 1px solid var(--border);
+    background: rgba(12,14,15,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; text-decoration: none; color: var(--text); }
+  .logo span { color: #c8f04d; }
+  nav ul { display: flex; gap: 8px; list-style: none; }
+  nav ul li a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 8px; transition: all 0.2s; }
+  nav ul li a:hover, nav ul li a.active { color: var(--text); background: var(--bg3); }
+
+  .page-hero { padding: 64px 48px 48px; max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
+  .page-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(77,240,184,0.1); border: 1px solid rgba(77,240,184,0.25); color: var(--accent); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; margin-bottom: 20px; }
+  .page-hero h1 { font-family: 'Fraunces', serif; font-size: 52px; font-weight: 700; letter-spacing: -2px; line-height: 1; margin-bottom: 16px; }
+  .page-hero p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 480px; }
+  .status-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; min-width: 220px; }
+  .status-block .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+  .status-block .status-row:last-child { margin-bottom: 0; }
+  .status-val { font-weight: 600; color: var(--accent); }
+  .status-label { color: var(--muted); }
+
+  .content { padding: 0 48px 80px; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+  .metric-card .val { font-size: 28px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  .metric-card .label { font-size: 12px; color: var(--muted); }
+  .metric-card .change { font-size: 11px; color: #c8f04d; margin-top: 4px; }
+
+  .clients-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .client-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+  .client-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .client-avatar { width: 40px; height: 40px; border-radius: 10px; background: rgba(77,240,184,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .client-name { font-size: 14px; font-weight: 600; }
+  .client-type { font-size: 11px; color: var(--muted); }
+  .client-stats { display: flex; gap: 20px; }
+  .cstat-val { font-size: 16px; font-weight: 600; color: var(--accent); }
+  .cstat-label { font-size: 11px; color: var(--muted); }
+  .tier-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: 8px; display: inline-block; }
+  .tier-gold { background: rgba(200,240,77,0.15); color: #c8f04d; }
+  .tier-silver { background: rgba(255,255,255,0.08); color: var(--muted); }
+  .tier-platinum { background: rgba(77,240,184,0.15); color: var(--accent); }
+
+  .pipeline { display: flex; gap: 12px; overflow-x: auto; margin-bottom: 32px; padding-bottom: 8px; }
+  .pipeline-col { min-width: 200px; }
+  .pipeline-col h4 { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .pipeline-col h4 span { background: var(--bg3); padding: 2px 7px; border-radius: 10px; font-size: 11px; }
+  .pipeline-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .pipeline-item .pi-name { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .pipeline-item .pi-val { font-size: 12px; color: var(--accent); }
+  .pipeline-item .pi-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Fashion<span>Flow</span></a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="erp.html">ERP</a></li>
+    <li><a href="crm.html" class="active">CRM</a></li>
+    <li><a href="wms.html">WMS</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div>
+    <div class="page-tag">Customer Relationship Management</div>
+    <h1>CRM</h1>
+    <p>Wholesale client management, order pipeline tracking, and relationship analytics for 2,400+ retail partners — connected via HTTPS over AWS Load Balancer.</p>
+  </div>
+  <div class="status-block">
+    <div class="status-row"><span class="status-label">Active Clients</span><span class="status-val">2,418</span></div>
+    <div class="status-row"><span class="status-label">Open Deals</span><span class="status-val">£1.8M</span></div>
+    <div class="status-row"><span class="status-label">NPS Score</span><span class="status-val">72</span></div>
+    <div class="status-row"><span class="status-label">Connection</span><span class="status-val">HTTPS/TLS</span></div>
+  </div>
+</div>
+
+<div class="content">
+  <p class="section-label">Pipeline Overview</p>
+  <div class="metrics-row">
+    <div class="metric-card"><div class="val">£1.8M</div><div class="label">Pipeline Value</div><div class="change">↑ 14% this month</div></div>
+    <div class="metric-card"><div class="val">84</div><div class="label">Active Deals</div><div class="change">12 closing this week</div></div>
+    <div class="metric-card"><div class="val">62%</div><div class="label">Win Rate</div><div class="change">↑ 4pts vs Q1</div></div>
+    <div class="metric-card"><div class="val">18d</div><div class="label">Avg. Sales Cycle</div><div class="change">↓ 2 days faster</div></div>
+  </div>
+
+  <p class="section-label">Top Wholesale Clients</p>
+  <div class="clients-grid">
+    <div class="client-card">
+      <div class="client-top">
+        <div class="client-avatar">🏬</div>
+        <div><div class="client-name">NextStyle Retail Group</div><div class="client-type">National Chain · 120 stores</div></div>
+      </div>
+      <div class="client-stats">
+        <div><div class="cstat-val">£480K</div><div class="cstat-label">Annual spend</div></div>
+        <div><div class="cstat-val">98%</div><div class="cstat-label">On-time pay</div></div>
+      </div>
+      <span class="tier-badge tier-platinum">Platinum</span>
+    </div>
+    <div class="client-card">
+      <div class="client-top">
+        <div class="client-avatar">🛍️</div>
+        <div><div class="client-name">Urban Boutique Co.</div><div class="client-type">Boutique Chain · 34 stores</div></div>
+      </div>
+      <div class="client-stats">
+        <div><div class="cstat-val">£210K</div><div class="cstat-label">Annual spend</div></div>
+        <div><div class="cstat-val">94%</div><div class="cstat-label">On-time pay</div></div>
+      </div>
+      <span class="tier-badge tier-gold">Gold</span>
+    </div>
+    <div class="client-card">
+      <div class="client-top">
+        <div class="client-avatar">👗</div>
+        <div><div class="client-name">Moderno Fashion</div><div class="client-type">Online Retailer</div></div>
+      </div>
+      <div class="client-stats">
+        <div><div class="cstat-val">£165K</div><div class="cstat-label">Annual spend</div></div>
+        <div><div class="cstat-val">100%</div><div class="cstat-label">On-time pay</div></div>
+      </div>
+      <span class="tier-badge tier-gold">Gold</span>
+    </div>
+    <div class="client-card">
+      <div class="client-top">
+        <div class="client-avatar">🏪</div>
+        <div><div class="client-name">StyleMart Ltd</div><div class="client-type">Discount Chain · 58 stores</div></div>
+      </div>
+      <div class="client-stats">
+        <div><div class="cstat-val">£390K</div><div class="cstat-label">Annual spend</div></div>
+        <div><div class="cstat-val">89%</div><div class="cstat-label">On-time pay</div></div>
+      </div>
+      <span class="tier-badge tier-platinum">Platinum</span>
+    </div>
+    <div class="client-card">
+      <div class="client-top">
+        <div class="client-avatar">🌐</div>
+        <div><div class="client-name">GlobalWear Online</div><div class="client-type">E-commerce Platform</div></div>
+      </div>
+      <div class="client-stats">
+        <div><div class="cstat-val">£88K</div><div class="cstat-label">Annual spend</div></div>
+        <div><div class="cstat-val">96%</div><div class="cstat-label">On-time pay</div></div>
+      </div>
+      <span class="tier-badge tier-silver">Silver</span>
+    </div>
+    <div class="client-card">
+      <div class="client-top">
+        <div class="client-avatar">✂️</div>
+        <div><div class="client-name">Tailor & Thread</div><div class="client-type">Independent · 8 stores</div></div>
+      </div>
+      <div class="client-stats">
+        <div><div class="cstat-val">£42K</div><div class="cstat-label">Annual spend</div></div>
+        <div><div class="cstat-val">100%</div><div class="cstat-label">On-time pay</div></div>
+      </div>
+      <span class="tier-badge tier-silver">Silver</span>
+    </div>
+  </div>
+
+  <p class="section-label">Sales Pipeline</p>
+  <div class="pipeline">
+    <div class="pipeline-col">
+      <h4>Prospect <span>12</span></h4>
+      <div class="pipeline-item"><div class="pi-name">FashionHub EU</div><div class="pi-val">£24,000</div><div class="pi-meta">Initial contact</div></div>
+      <div class="pipeline-item"><div class="pi-name">Trendy Closet</div><div class="pi-val">£18,500</div><div class="pi-meta">Discovery call</div></div>
+      <div class="pipeline-item"><div class="pi-name">StreetStyle Ltd</div><div class="pi-val">£31,000</div><div class="pi-meta">Referral lead</div></div>
+    </div>
+    <div class="pipeline-col">
+      <h4>Proposal <span>8</span></h4>
+      <div class="pipeline-item"><div class="pi-name">Nordic Fashion AS</div><div class="pi-val">£62,000</div><div class="pi-meta">Quote sent Jun 3</div></div>
+      <div class="pipeline-item"><div class="pi-name">Bella Boutiques</div><div class="pi-val">£44,200</div><div class="pi-meta">Awaiting approval</div></div>
+    </div>
+    <div class="pipeline-col">
+      <h4>Negotiation <span>5</span></h4>
+      <div class="pipeline-item"><div class="pi-name">MegaMall Group</div><div class="pi-val">£180,000</div><div class="pi-meta">Contract review</div></div>
+      <div class="pipeline-item"><div class="pi-name">CityWear Chain</div><div class="pi-val">£95,000</div><div class="pi-meta">Terms agreed</div></div>
+    </div>
+    <div class="pipeline-col">
+      <h4>Closing <span>4</span></h4>
+      <div class="pipeline-item"><div class="pi-name">LuxeRetail PLC</div><div class="pi-val">£220,000</div><div class="pi-meta">Signing Jun 10</div></div>
+      <div class="pipeline-item"><div class="pi-name">FreshFit Stores</div><div class="pi-val">£76,000</div><div class="pi-meta">Final approval</div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

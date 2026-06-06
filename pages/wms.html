@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WMS — FashionFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0e0f; --bg2: #141618; --bg3: #1c1f21;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e6e1; --muted: #7a7975;
+    --accent: #f04d7a;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 48px; pointer-events: none; z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px; border-bottom: 1px solid var(--border);
+    background: rgba(12,14,15,0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; text-decoration: none; color: var(--text); }
+  .logo span { color: #c8f04d; }
+  nav ul { display: flex; gap: 8px; list-style: none; }
+  nav ul li a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 8px; transition: all 0.2s; }
+  nav ul li a:hover, nav ul li a.active { color: var(--text); background: var(--bg3); }
+
+  .page-hero { padding: 64px 48px 48px; max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
+  .page-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(240,77,122,0.1); border: 1px solid rgba(240,77,122,0.25); color: var(--accent); font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; margin-bottom: 20px; }
+  .page-hero h1 { font-family: 'Fraunces', serif; font-size: 52px; font-weight: 700; letter-spacing: -2px; line-height: 1; margin-bottom: 16px; }
+  .page-hero p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 480px; }
+  .status-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; min-width: 220px; }
+  .status-block .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+  .status-block .status-row:last-child { margin-bottom: 0; }
+  .status-val { font-weight: 600; color: var(--accent); }
+  .status-label { color: var(--muted); }
+
+  .content { padding: 0 48px 80px; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+
+  .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  .metric-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+  .metric-card .val { font-size: 28px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+  .metric-card .label { font-size: 12px; color: var(--muted); }
+  .metric-card .change { font-size: 11px; color: #4df0b8; margin-top: 4px; }
+
+  .warehouses-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+  .wh-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+  .wh-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .wh-name { font-size: 16px; font-weight: 600; }
+  .wh-loc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .online-badge { font-size: 11px; font-weight: 500; background: rgba(77,240,184,0.12); color: #4df0b8; padding: 3px 10px; border-radius: 20px; }
+  .capacity-bar { height: 6px; background: var(--bg3); border-radius: 3px; margin-bottom: 6px; overflow: hidden; }
+  .capacity-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.6s ease; }
+  .capacity-label { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 16px; }
+  .wh-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .ws { }
+  .ws-val { font-size: 18px; font-weight: 600; color: var(--accent); }
+  .ws-label { font-size: 11px; color: var(--muted); }
+
+  .orders-table { width: 100%; border-collapse: collapse; }
+  .orders-table th { text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .orders-table td { font-size: 13px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .orders-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .status-pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+  .pill-green { background: rgba(77,240,184,0.12); color: #4df0b8; }
+  .pill-yellow { background: rgba(200,240,77,0.12); color: #c8f04d; }
+  .pill-pink { background: rgba(240,77,122,0.12); color: var(--accent); }
+
+  .vpn-note { background: rgba(240,77,122,0.06); border: 1px solid rgba(240,77,122,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+  .vpn-note strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Fashion<span>Flow</span></a>
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="erp.html">ERP</a></li>
+    <li><a href="crm.html">CRM</a></li>
+    <li><a href="wms.html" class="active">WMS</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div>
+    <div class="page-tag">Warehouse Management System</div>
+    <h1>WMS</h1>
+    <p>Real-time inventory control, order fulfilment, and multi-warehouse coordination — connected via Site-to-Site VPN over AWS private subnet.</p>
+  </div>
+  <div class="status-block">
+    <div class="status-row"><span class="status-label">Total SKUs</span><span class="status-val">52,841</span></div>
+    <div class="status-row"><span class="status-label">Pending Orders</span><span class="status-val">1,284</span></div>
+    <div class="status-row"><span class="status-label">Accuracy</span><span class="status-val">99.6%</span></div>
+    <div class="status-row"><span class="status-label">Network</span><span class="status-val">VPN Tunnel</span></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="vpn-note">
+    🔒 <div><strong>Secure Connection:</strong> All 4 warehouses are connected to the AWS cloud platform via Site-to-Site IPsec VPN tunnels — data is encrypted in transit at all times.</div>
+  </div>
+
+  <p class="section-label">Warehouse Overview</p>
+  <div class="metrics-row">
+    <div class="metric-card"><div class="val">52,841</div><div class="label">Total SKUs</div><div class="change">↑ 840 this week</div></div>
+    <div class="metric-card"><div class="val">1,284</div><div class="label">Pending Dispatch</div><div class="change">Due today: 312</div></div>
+    <div class="metric-card"><div class="val">99.6%</div><div class="label">Pick Accuracy</div><div class="change">Industry avg: 97%</div></div>
+    <div class="metric-card"><div class="val">4.2h</div><div class="label">Avg Fulfilment</div><div class="change">↓ 0.8h this month</div></div>
+  </div>
+
+  <p class="section-label">Warehouse Locations</p>
+  <div class="warehouses-grid">
+    <div class="wh-card">
+      <div class="wh-header">
+        <div><div class="wh-name">London Central</div><div class="wh-loc">📍 Heathrow Logistics Park</div></div>
+        <span class="online-badge">● Online</span>
+      </div>
+      <div class="capacity-bar"><div class="capacity-fill" style="width:78%"></div></div>
+      <div class="capacity-label"><span>Capacity used</span><span>78% · 18,400 units</span></div>
+      <div class="wh-stats">
+        <div class="ws"><div class="ws-val">18.4K</div><div class="ws-label">Units</div></div>
+        <div class="ws"><div class="ws-val">284</div><div class="ws-label">Today's picks</div></div>
+        <div class="ws"><div class="ws-val">2.1h</div><div class="ws-label">Avg fulfilment</div></div>
+      </div>
+    </div>
+    <div class="wh-card">
+      <div class="wh-header">
+        <div><div class="wh-name">Manchester North</div><div class="wh-loc">📍 Trafford Industrial Estate</div></div>
+        <span class="online-badge">● Online</span>
+      </div>
+      <div class="capacity-bar"><div class="capacity-fill" style="width:62%"></div></div>
+      <div class="capacity-label"><span>Capacity used</span><span>62% · 14,200 units</span></div>
+      <div class="wh-stats">
+        <div class="ws"><div class="ws-val">14.2K</div><div class="ws-label">Units</div></div>
+        <div class="ws"><div class="ws-val">196</div><div class="ws-label">Today's picks</div></div>
+        <div class="ws"><div class="ws-val">3.4h</div><div class="ws-label">Avg fulfilment</div></div>
+      </div>
+    </div>
+    <div class="wh-card">
+      <div class="wh-header">
+        <div><div class="wh-name">Birmingham South</div><div class="wh-loc">📍 Solihull Distribution Hub</div></div>
+        <span class="online-badge">● Online</span>
+      </div>
+      <div class="capacity-bar"><div class="capacity-fill" style="width:45%"></div></div>
+      <div class="capacity-label"><span>Capacity used</span><span>45% · 10,600 units</span></div>
+      <div class="wh-stats">
+        <div class="ws"><div class="ws-val">10.6K</div><div class="ws-label">Units</div></div>
+        <div class="ws"><div class="ws-val">142</div><div class="ws-label">Today's picks</div></div>
+        <div class="ws"><div class="ws-val">4.8h</div><div class="ws-label">Avg fulfilment</div></div>
+      </div>
+    </div>
+    <div class="wh-card">
+      <div class="wh-header">
+        <div><div class="wh-name">Edinburgh Depot</div><div class="wh-loc">📍 Newbridge Industrial Zone</div></div>
+        <span class="online-badge">● Online</span>
+      </div>
+      <div class="capacity-bar"><div class="capacity-fill" style="width:55%"></div></div>
+      <div class="capacity-label"><span>Capacity used</span><span>55% · 9,600 units</span></div>
+      <div class="wh-stats">
+        <div class="ws"><div class="ws-val">9.6K</div><div class="ws-label">Units</div></div>
+        <div class="ws"><div class="ws-val">98</div><div class="ws-label">Today's picks</div></div>
+        <div class="ws"><div class="ws-val">5.2h</div><div class="ws-label">Avg fulfilment</div></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">Active Dispatch Orders</p>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Client</th>
+          <th>Items</th>
+          <th>Warehouse</th>
+          <th>Carrier</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>#WH-7821</td><td>NextStyle Retail</td><td>240 units</td><td>London</td><td>DHL Express</td><td><span class="status-pill pill-green">Dispatched</span></td></tr>
+        <tr><td>#WH-7834</td><td>Urban Boutique</td><td>85 units</td><td>Manchester</td><td>DPD UK</td><td><span class="status-pill pill-green">Dispatched</span></td></tr>
+        <tr><td>#WH-7849</td><td>StyleMart Ltd</td><td>420 units</td><td>London</td><td>FedEx</td><td><span class="status-pill pill-yellow">Picking</span></td></tr>
+        <tr><td>#WH-7852</td><td>Moderno Fashion</td><td>62 units</td><td>Birmingham</td><td>Royal Mail</td><td><span class="status-pill pill-yellow">Packing</span></td></tr>
+        <tr><td>#WH-7861</td><td>GlobalWear Online</td><td>310 units</td><td>Edinburgh</td><td>TNT</td><td><span class="status-pill pill-pink">On Hold</span></td></tr>
+        <tr><td>#WH-7874</td><td>LuxeRetail PLC</td><td>180 units</td><td>Manchester</td><td>DHL Express</td><td><span class="status-pill pill-yellow">Picking</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

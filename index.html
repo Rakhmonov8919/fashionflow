@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FashionFlow — Cloud Business Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0e0f;
+    --bg2: #141618;
+    --bg3: #1c1f21;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e6e1;
+    --muted: #7a7975;
+    --accent: #c8f04d;
+    --accent2: #4df0b8;
+    --accent3: #f04d7a;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(12,14,15,0.85);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+  nav ul { display: flex; gap: 8px; list-style: none; }
+  nav ul li a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  nav ul li a:hover, nav ul li a.active {
+    color: var(--text);
+    background: var(--bg3);
+  }
+  .nav-badge {
+    background: var(--accent);
+    color: #0c0e0f;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 100px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(200,240,77,0.1);
+    border: 1px solid rgba(200,240,77,0.25);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+  }
+  .hero-tag::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero p {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 540px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent);
+    color: #0c0e0f;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,240,77,0.25); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: var(--bg3); }
+
+  /* SYSTEMS GRID */
+  .systems {
+    padding: 0 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .sys-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .sys-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .sys-card.erp::before { background: var(--accent); }
+  .sys-card.crm::before { background: var(--accent2); }
+  .sys-card.wms::before { background: var(--accent3); }
+  .sys-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.14); }
+  .sys-card:hover::before { opacity: 1; }
+
+  .sys-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .sys-card.erp .sys-icon { background: rgba(200,240,77,0.1); }
+  .sys-card.crm .sys-icon { background: rgba(77,240,184,0.1); }
+  .sys-card.wms .sys-icon { background: rgba(240,77,122,0.1); }
+
+  .sys-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .sys-card .sys-sub {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .sys-card p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+
+  .sys-stats { display: flex; gap: 24px; }
+  .stat { }
+  .stat-val { font-size: 20px; font-weight: 600; }
+  .stat-label { font-size: 11px; color: var(--muted); }
+  .sys-card.erp .stat-val { color: var(--accent); }
+  .sys-card.crm .stat-val { color: var(--accent2); }
+  .sys-card.wms .stat-val { color: var(--accent3); }
+
+  .sys-arrow {
+    position: absolute;
+    top: 32px; right: 32px;
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .sys-card:hover .sys-arrow { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+  /* INFRA STRIP */
+  .infra {
+    margin: 0 48px 80px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .infra-left h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .infra-left p { font-size: 13px; color: var(--muted); }
+  .infra-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .infra-badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot-green { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); }
+  .dot-yellow { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  footer p { font-size: 13px; color: var(--muted); }
+
+  /* GRID BG */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 60px 20px 40px; }
+    .systems { padding: 0 20px 40px; }
+    .systems-grid { grid-template-columns: 1fr; }
+    .infra { margin: 0 20px 40px; }
+    footer { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Fashion<span>Flow</span></div>
+  <ul>
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="pages/erp.html">ERP</a></li>
+    <li><a href="pages/crm.html">CRM</a></li>
+    <li><a href="pages/wms.html">WMS</a></li>
+  </ul>
+  <span class="nav-badge">AWS Cloud ●</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">Cloud-based Business Platform</div>
+  <h1>Wholesale fashion,<br><em>managed from</em><br>the cloud.</h1>
+  <p>FashionFlow unifies your ERP, CRM and Warehouse systems into one secure, scalable cloud platform — built on AWS infrastructure.</p>
+  <div class="hero-actions">
+    <a href="pages/erp.html" class="btn-primary">Explore Systems →</a>
+    <a href="#infrastructure" class="btn-ghost">View Infrastructure</a>
+  </div>
+</section>
+
+<section class="systems">
+  <p class="section-label">Business Systems</p>
+  <div class="systems-grid">
+    <a href="pages/erp.html" class="sys-card erp">
+      <div class="sys-arrow">→</div>
+      <div class="sys-icon">📊</div>
+      <div class="sys-sub">Enterprise Resource Planning</div>
+      <h3>ERP</h3>
+      <p>Financial management, supply chain operations, and company-wide resource planning.</p>
+      <div class="sys-stats">
+        <div class="stat"><div class="stat-val">99.9%</div><div class="stat-label">Uptime</div></div>
+        <div class="stat"><div class="stat-val">12ms</div><div class="stat-label">Latency</div></div>
+      </div>
+    </a>
+    <a href="pages/crm.html" class="sys-card crm">
+      <div class="sys-arrow">→</div>
+      <div class="sys-icon">🤝</div>
+      <div class="sys-sub">Customer Relationship Management</div>
+      <h3>CRM</h3>
+      <p>Customer profiles, order tracking, and wholesale client relationship management.</p>
+      <div class="sys-stats">
+        <div class="stat"><div class="stat-val">2,400+</div><div class="stat-label">Clients</div></div>
+        <div class="stat"><div class="stat-val">98%</div><div class="stat-label">Satisfaction</div></div>
+      </div>
+    </a>
+    <a href="pages/wms.html" class="sys-card wms">
+      <div class="sys-arrow">→</div>
+      <div class="sys-icon">📦</div>
+      <div class="sys-sub">Warehouse Management System</div>
+      <h3>WMS</h3>
+      <p>Real-time inventory tracking, order fulfillment, and multi-warehouse coordination.</p>
+      <div class="sys-stats">
+        <div class="stat"><div class="stat-val">4</div><div class="stat-label">Warehouses</div></div>
+        <div class="stat"><div class="stat-val">50k+</div><div class="stat-label">SKUs</div></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<div class="infra" id="infrastructure">
+  <div class="infra-left">
+    <h3>AWS Cloud Infrastructure</h3>
+    <p>Deployed on Amazon Web Services — eu-west-1 region</p>
+  </div>
+  <div class="infra-badges">
+    <div class="infra-badge"><span class="dot-green"></span>VPC Isolated Network</div>
+    <div class="infra-badge"><span class="dot-green"></span>Load Balancer Active</div>
+    <div class="infra-badge"><span class="dot-green"></span>Auto Scaling Enabled</div>
+    <div class="infra-badge"><span class="dot-yellow"></span>SSL/TLS Encrypted</div>
+    <div class="infra-badge"><span class="dot-green"></span>NAT Gateway</div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 FashionFlow Cloud Platform</p>
+  <p>Deployed on AWS · VPC · EC2 · ALB</p>
+</footer>
+
+</body>
+</html>
